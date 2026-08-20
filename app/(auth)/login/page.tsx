@@ -1,0 +1,65 @@
+"use client";
+// "use client" zaroori hai kyunki yahan button click (onClick) hoga -
+// yeh browser mein interactive hona chahiye, Server Component nahi ho sakta
+
+import { createClient } from "@/lib/supabase/client";
+import Navbar from "@/components/ui/Navbar";
+
+export default function LoginPage() {
+  const supabase = createClient(); // browser wala Supabase client banaya
+
+  async function handleGoogleLogin() {
+    // Supabase ko keh rahe hain "Google ke sath OAuth flow shuru karo"
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${location.origin}/auth/callback`,
+      },
+    });
+    // is call ke baad browser khud Google ki login screen par chala jayega
+  }
+
+  return (
+    <div className="min-h-screen bg-surface-black">
+      <Navbar showSearch={false} />
+
+      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4">
+        <div className="w-full max-w-sm rounded-card border border-surface-border bg-surface-card p-8">
+          <h1 className="font-display text-2xl font-semibold text-text-primary mb-2">
+            Welcome back
+          </h1>
+          <p className="text-sm text-text-muted mb-6">
+            Sign in to book appointments or manage your business.
+          </p>
+
+          <button
+            onClick={handleGoogleLogin}
+            suppressHydrationWarning
+            className="w-full flex items-center justify-center gap-2 bg-accent text-surface-black font-medium py-3 rounded-pill hover:bg-accent-hover transition-colors"
+          >
+            {/* Google "G" icon - inline SVG, no extra package needed */}
+            <svg className="h-4 w-4" viewBox="0 0 24 24">
+              <path
+                fill="currentColor"
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
+              />
+              <path
+                fill="currentColor"
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.99.66-2.25 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23z"
+              />
+              <path
+                fill="currentColor"
+                d="M5.84 14.09A6.6 6.6 0 0 1 5.5 12c0-.73.13-1.43.34-2.09V7.07H2.18A11 11 0 0 0 1 12c0 1.77.43 3.45 1.18 4.93z"
+              />
+              <path
+                fill="currentColor"
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1a11 11 0 0 0-9.82 6.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+              />
+            </svg>
+            Sign in with Google
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
