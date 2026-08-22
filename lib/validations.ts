@@ -18,6 +18,9 @@ export const dayRuleSchema = z.object({
   enabled: z.boolean(),
   start_time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
   end_time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
+}).refine((rule) => !rule.enabled || rule.start_time < rule.end_time, {
+  message: "Start time end time se pehle hona chahiye",
+  path: ["end_time"],
 })
 
 export const availabilitySchema = z.array(dayRuleSchema)

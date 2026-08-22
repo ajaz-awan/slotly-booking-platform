@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { NextRequest, NextResponse } from "next/server"
 import { checkRateLimit } from "@/lib/rate-limit"
+import { bookingSchema } from "@/lib/validations"
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient()
@@ -16,11 +17,13 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json()
-  const { serviceId, bookingDate, startTime } = body
+  const parsed = bookingSchema.safeParse(body)
 
-  if (!serviceId || !bookingDate || !startTime) {
-    return NextResponse.json({ error: "Zaroori fields missing hain" }, { status: 400 })
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Invalid booking data" }, { status: 400 })
   }
+
+  const { serviceId, bookingDate, startTime } = parsed.data
 
   const { data: service } = await supabase
     .from("services")
