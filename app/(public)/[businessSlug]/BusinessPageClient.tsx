@@ -108,17 +108,18 @@ export default function BusinessPageClient({ business, services }: { business: B
 
   return (
     <div className="min-h-screen bg-surface-black pb-32">
-      <div className="relative h-48 bg-surface-card">
+      <div className="relative h-56 rounded-b-card overflow-hidden bg-surface-card">
         {business.cover_photo_url && (
           <img src={business.cover_photo_url} alt="" className="w-full h-full object-cover" />
         )}
-        <div className="absolute -bottom-8 left-6 h-16 w-16 rounded-2xl bg-surface-card border-4 border-surface-black overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-t from-surface-black via-black/10 to-transparent" />
+        <div className="absolute -bottom-8 left-6 h-16 w-16 rounded-full bg-surface-card border-4 border-surface-black overflow-hidden">
           {business.logo_url && <img src={business.logo_url} alt="" className="w-full h-full object-cover" />}
         </div>
       </div>
 
       <div className="px-6 pt-12">
-        <h1 className="font-display text-2xl font-semibold text-text-primary">{business.name}</h1>
+        <h1 className="font-display italic text-2xl font-medium text-text-primary">{business.name}</h1>
         <p className="text-text-muted text-sm capitalize mt-0.5">{business.category}</p>
 
         <h2 className="font-display text-lg font-medium text-text-primary mt-8 mb-3">Services</h2>
@@ -132,7 +133,7 @@ export default function BusinessPageClient({ business, services }: { business: B
                   ? { borderColor: accentColor, backgroundColor: `${accentColor}1A` }
                   : {}
               }
-              className={`flex-shrink-0 w-48 rounded-2xl border p-4 text-left ${
+              className={`flex-shrink-0 w-48 rounded-card border p-4 text-left ${
                 selectedService?.id === service.id ? "" : "border-white/10 bg-surface-card"
               }`}
             >
@@ -171,7 +172,7 @@ export default function BusinessPageClient({ business, services }: { business: B
                       key={formatDateKey(day)}
                       onClick={() => setSelectedDate(day)}
                       style={isSelected ? { backgroundColor: accentColor } : {}}
-                      className={`flex-shrink-0 w-14 rounded-xl py-2.5 text-center ${
+                      className={`flex-shrink-0 w-14 rounded-card py-2.5 text-center ${
                         isSelected ? "" : "bg-surface-card"
                       }`}
                     >
@@ -267,7 +268,7 @@ export default function BusinessPageClient({ business, services }: { business: B
 
       {reserveSuccess && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center px-6 z-50">
-          <div className="bg-surface-card rounded-2xl p-6 max-w-sm w-full text-center">
+          <div className="bg-surface-card rounded-card p-6 max-w-sm w-full text-center">
             <p className="text-text-primary font-medium mb-1">Booking request bhej di gayi!</p>
             <p className="text-text-muted text-sm mb-4">Owner approve karega toh confirmation mil jayegi.</p>
             <button

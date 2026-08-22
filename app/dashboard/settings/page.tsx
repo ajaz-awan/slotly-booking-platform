@@ -16,5 +16,5 @@ export default async function SettingsPage() {
 
   if (!business) redirect("/dashboard/onboarding")
 
-  return <SettingsClient business={business} />
+  return <SettingsClient business={business} currentEmail={user.email ?? ""} />
 }

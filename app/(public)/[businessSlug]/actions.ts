@@ -17,18 +17,19 @@ export async function getSlotsForDate(serviceId: string, dateString: string) {
   const date = new Date(dateString)
   const dayOfWeek = date.getDay()
 
-  const { data: rules } = await supabase
-    .from("availability_rules")
-    .select("day_of_week, start_time, end_time")
-    .eq("business_id", service.business_id)
-    .eq("day_of_week", dayOfWeek)
-
-  const { data: existingBookings } = await supabase
-    .from("bookings")
-    .select("start_time, end_time")
-    .eq("service_id", serviceId)
-    .eq("booking_date", dateString)
-    .neq("status", "cancelled")
+  const [{ data: rules }, { data: existingBookings }] = await Promise.all([
+    supabase
+      .from("availability_rules")
+      .select("day_of_week, start_time, end_time")
+      .eq("business_id", service.business_id)
+      .eq("day_of_week", dayOfWeek),
+    supabase
+      .from("bookings")
+      .select("start_time, end_time")
+      .eq("service_id", serviceId)
+      .eq("booking_date", dateString)
+      .neq("status", "cancelled"),
+  ])
 
   return generateAvailableSlots({
     date,

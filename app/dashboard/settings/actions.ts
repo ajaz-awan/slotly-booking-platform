@@ -19,6 +19,15 @@ async function uploadImage(businessId: string, file: File, kind: "logo" | "cover
   return data.publicUrl
 }
 
+export async function updateAccountEmail(newEmail: string) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) throw new Error("Not authenticated")
+
+  const { error } = await supabase.auth.updateUser({ email: newEmail })
+  if (error) throw new Error(error.message)
+}
+
 export async function updateBusinessImages(formData: FormData) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()

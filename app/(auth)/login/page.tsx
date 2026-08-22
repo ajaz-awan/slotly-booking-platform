@@ -1,22 +1,18 @@
 "use client";
-// "use client" zaroori hai kyunki yahan button click (onClick) hoga -
-// yeh browser mein interactive hona chahiye, Server Component nahi ho sakta
 
 import { createClient } from "@/lib/supabase/client";
 import Navbar from "@/components/ui/Navbar";
 
 export default function LoginPage() {
-  const supabase = createClient(); // browser wala Supabase client banaya
+  const supabase = createClient();
 
   async function handleGoogleLogin() {
-    // Supabase ko keh rahe hain "Google ke sath OAuth flow shuru karo"
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: `${location.origin}/auth/callback`,
       },
     });
-    // is call ke baad browser khud Google ki login screen par chala jayega
   }
 
   return (
@@ -25,7 +21,7 @@ export default function LoginPage() {
 
       <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4">
         <div className="w-full max-w-sm rounded-card border border-surface-border bg-surface-card p-8">
-          <h1 className="font-display text-2xl font-semibold text-text-primary mb-2">
+          <h1 className="font-display italic text-2xl font-medium text-text-primary mb-2">
             Welcome back
           </h1>
           <p className="text-sm text-text-muted mb-6">
@@ -37,7 +33,6 @@ export default function LoginPage() {
             suppressHydrationWarning
             className="w-full flex items-center justify-center gap-2 bg-accent text-surface-black font-medium py-3 rounded-pill hover:bg-accent-hover transition-colors"
           >
-            {/* Google "G" icon - inline SVG, no extra package needed */}
             <svg className="h-4 w-4" viewBox="0 0 24 24">
               <path
                 fill="currentColor"

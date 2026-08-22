@@ -74,7 +74,7 @@ export default function BookingsClient({
     <div className="min-h-screen bg-surface-black px-6 py-8">
       <div className="mx-auto max-w-3xl">
         <div className="flex items-center gap-3 mb-4">
-          <h1 className="font-display text-2xl font-semibold text-text-primary">Bookings</h1>
+          <h1 className="font-display italic text-2xl font-medium text-text-primary">Bookings</h1>
           {pendingCount > 0 && (
             <span className="text-xs px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-400">
               {pendingCount} pending
@@ -106,7 +106,7 @@ export default function BookingsClient({
             const service = getServiceInfo(booking)
             const isPending = booking.status === "pending"
             return (
-              <div key={booking.id} className="rounded-2xl bg-surface-card px-5 py-4">
+              <div key={booking.id} className="rounded-card bg-surface-card px-5 py-4">
                 <div className="flex items-start justify-between">
                   <div>
                     <h3 className="font-medium text-text-primary">{booking.customer_name}</h3>
@@ -142,7 +142,7 @@ export default function BookingsClient({
                       onClick={() => handleDecision(booking.id, "confirmed")}
                       disabled={processingId === booking.id}
                       style={{ backgroundColor: accentColor }}
-                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium text-[#121212] disabled:opacity-50"
+                      className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium text-[#121212] disabled:opacity-50"
                     >
                       <Check size={13} />
                       Accept
@@ -150,7 +150,7 @@ export default function BookingsClient({
                     <button
                       onClick={() => handleDecision(booking.id, "cancelled")}
                       disabled={processingId === booking.id}
-                      className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium bg-red-500/15 text-red-400 disabled:opacity-50"
+                      className="flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium bg-red-500/15 text-red-400 disabled:opacity-50"
                     >
                       <X size={13} />
                       Decline

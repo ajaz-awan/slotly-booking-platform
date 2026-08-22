@@ -5,13 +5,9 @@ import Link from 'next/link';
 import { Search, Menu, X, User, Settings } from 'lucide-react';
 
 type NavbarProps = {
-  
   businessName?: string;
-  /** Business logo URL — shown next to businessName when provided. */
   businessLogoUrl?: string;
-  
   isSignedIn?: boolean;
-  
   showSearch?: boolean;
 };
 
@@ -26,24 +22,22 @@ export default function Navbar({
   return (
     <header className="sticky top-0 z-50 border-b border-surface-border bg-surface-black/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:px-6">
-        {/* Left: logo / business identity */}
-        <Link href="/" className="flex shrink-0 items-center gap-2">
+        <Link href="/" className="flex shrink-0 items-center gap-2.5">
           {businessLogoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={businessLogoUrl}
               alt={businessName ?? 'Business logo'}
-              className="h-8 w-8 rounded-full object-cover"
+              className="h-9 w-9 rounded-full object-cover"
             />
           ) : (
-            <span className="h-8 w-8 rounded-full bg-accent" aria-hidden />
+            <span className="h-9 w-9 rounded-full bg-accent" aria-hidden />
           )}
-          <span className="text-lg font-semibold tracking-tight text-text-primary">
+          <span className="font-display text-lg italic font-medium tracking-tight text-text-primary">
             {businessName ?? 'Slotly'}
           </span>
         </Link>
 
-        {/* Center: search bar (desktop only, matches reference design) */}
         {showSearch && (
           <div className="hidden flex-1 items-center gap-2 rounded-pill bg-surface-card px-4 py-2.5 md:flex">
             <Search className="h-4 w-4 text-text-muted" />
@@ -55,7 +49,6 @@ export default function Navbar({
           </div>
         )}
 
-        {/* Right: auth action (desktop) */}
         <div className="ml-auto hidden items-center gap-3 md:flex">
           {isSignedIn ? (
             <>
@@ -82,7 +75,6 @@ export default function Navbar({
           )}
         </div>
 
-        {/* Mobile menu toggle */}
         <button
           className="ml-auto flex h-9 w-9 items-center justify-center rounded-full bg-surface-card text-text-primary md:hidden"
           onClick={() => setMobileOpen((open) => !open)}
@@ -92,7 +84,6 @@ export default function Navbar({
         </button>
       </div>
 
-      {/* Mobile panel */}
       {mobileOpen && (
         <div className="border-t border-surface-border bg-surface-black px-4 py-4 md:hidden">
           {showSearch && (

@@ -52,7 +52,7 @@ export default function ServicesClient({
     <div className="min-h-screen bg-surface-black px-6 py-8">
       <div className="mx-auto max-w-3xl">
         <div className="flex items-center justify-between mb-6">
-          <h1 className="font-display text-2xl font-semibold text-text-primary">Services</h1>
+          <h1 className="font-display italic text-2xl font-medium text-text-primary">Services</h1>
           <button
             onClick={openCreate}
             style={{ backgroundColor: accentColor }}
@@ -73,7 +73,7 @@ export default function ServicesClient({
           {services.map((service) => (
             <div
               key={service.id}
-              className="flex items-center justify-between rounded-2xl bg-surface-card px-5 py-4"
+              className="flex items-center justify-between rounded-card bg-surface-card px-5 py-4"
             >
               <div className="flex-1">
                 <div className="flex items-center gap-2">
@@ -135,7 +135,7 @@ export default function ServicesClient({
 
       {pendingDelete && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center px-6 z-50">
-          <div className="bg-surface-card rounded-2xl p-6 max-w-sm w-full">
+          <div className="bg-surface-card rounded-card p-6 max-w-sm w-full">
             <p className="text-text-primary mb-4">Ye service delete karni hai? Ye undo nahi ho sakta.</p>
             <div className="flex justify-end gap-3">
               <button
@@ -208,9 +208,9 @@ function ServiceFormModal({
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center px-6 z-50">
-      <div className="bg-surface-card rounded-2xl p-6 max-w-md w-full">
+      <div className="bg-surface-card rounded-card p-6 max-w-md w-full">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-display text-lg font-semibold text-text-primary">
+          <h2 className="font-display italic text-lg font-medium text-text-primary">
             {service ? "Edit Service" : "New Service"}
           </h2>
           <button onClick={onClose} className="text-text-muted">
@@ -223,14 +223,14 @@ function ServiceFormModal({
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Service name"
-            className="bg-surface-black rounded-xl px-4 py-3 text-text-primary text-sm outline-none"
+            className="bg-surface-black rounded-card px-4 py-3 text-text-primary text-sm outline-none"
           />
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Description"
             rows={3}
-            className="bg-surface-black rounded-xl px-4 py-3 text-text-primary text-sm outline-none resize-none"
+            className="bg-surface-black rounded-card px-4 py-3 text-text-primary text-sm outline-none resize-none"
           />
           <div className="flex gap-3">
             <div className="flex-1">
@@ -239,7 +239,7 @@ function ServiceFormModal({
                 type="number"
                 value={duration}
                 onChange={(e) => setDuration(Number(e.target.value))}
-                className="w-full bg-surface-black rounded-xl px-4 py-3 text-text-primary text-sm outline-none mt-1"
+                className="w-full bg-surface-black rounded-card px-4 py-3 text-text-primary text-sm outline-none mt-1"
               />
             </div>
             <div className="flex-1">
@@ -248,7 +248,7 @@ function ServiceFormModal({
                 type="number"
                 value={price}
                 onChange={(e) => setPrice(Number(e.target.value))}
-                className="w-full bg-surface-black rounded-xl px-4 py-3 text-text-primary text-sm outline-none mt-1"
+                className="w-full bg-surface-black rounded-card px-4 py-3 text-text-primary text-sm outline-none mt-1"
               />
             </div>
           </div>

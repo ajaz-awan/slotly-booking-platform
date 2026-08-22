@@ -4,7 +4,8 @@ import ServicesClient from "./ServicesClient"
 
 export default async function ServicesPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { session } } = await supabase.auth.getSession()
+  const user = session?.user
   if (!user) redirect("/login")
 
   const { data: business } = await supabase

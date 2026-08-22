@@ -2,8 +2,22 @@
 
 import Link from "next/link"
 import { useMemo, useState } from "react"
+import {
+  ArrowUpRight,
+  Flower2,
+  GraduationCap,
+  Scissors,
+  Sparkles,
+  Stethoscope,
+} from "lucide-react"
 
-const CATEGORIES = ["Salon", "Barbershop", "Clinic", "Tutor", "Spa"]
+const CATEGORIES = [
+  { label: "Salon", icon: Sparkles },
+  { label: "Barbershop", icon: Scissors },
+  { label: "Clinic", icon: Stethoscope },
+  { label: "Tutor", icon: GraduationCap },
+  { label: "Spa", icon: Flower2 },
+]
 
 type Business = {
   id: string
@@ -48,29 +62,39 @@ export default function BusinessDiscovery({ businesses }: { businesses: Business
             suppressHydrationWarning
           />
         </div>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {CATEGORIES.map((cat) => {
-            const isActive = activeCategory?.toLowerCase() === cat.toLowerCase()
-
-            return (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(isActive ? null : cat)}
-                className={`rounded-pill border px-4 py-1.5 text-sm transition-colors ${
-                  isActive
-                    ? "border-accent bg-accent text-surface-black"
-                    : "border-surface-border bg-surface-card text-text-primary hover:border-accent hover:text-accent"
-                }`}
-                suppressHydrationWarning
-              >
-                {cat}
-              </button>
-            )
-          })}
-        </div>
       </div>
 
-      <section className="mx-auto max-w-6xl px-0 pb-24 pt-12">
+      <div className="mt-8 flex gap-6 overflow-x-auto pb-2">
+        {CATEGORIES.map(({ label, icon: Icon }) => {
+          const isActive = activeCategory?.toLowerCase() === label.toLowerCase()
+
+          return (
+            <button
+              key={label}
+              onClick={() => setActiveCategory(isActive ? null : label)}
+              className="flex shrink-0 flex-col items-center gap-2"
+              suppressHydrationWarning
+            >
+              <span
+                className={`flex h-16 w-16 items-center justify-center rounded-full border transition-colors ${
+                  isActive
+                    ? "border-accent bg-accent text-surface-black"
+                    : "border-surface-border bg-surface-card text-text-primary"
+                }`}
+              >
+                <Icon className="h-6 w-6" />
+              </span>
+              <span
+                className={`text-xs ${isActive ? "text-accent" : "text-text-muted"}`}
+              >
+                {label}
+              </span>
+            </button>
+          )
+        })}
+      </div>
+
+      <section className="pb-24 pt-12">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="font-display text-xl font-semibold text-text-primary">
             Businesses on Slotly
@@ -85,7 +109,7 @@ export default function BusinessDiscovery({ businesses }: { businesses: Business
           </p>
         )}
 
-        <div className="flex gap-4 overflow-x-auto pb-2">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((biz) => {
             const prices = (biz.services ?? []).map((s) => s.price)
             const startingPrice = prices.length > 0 ? Math.min(...prices) : null
@@ -94,26 +118,27 @@ export default function BusinessDiscovery({ businesses }: { businesses: Business
               <Link
                 key={biz.id}
                 href={`/${biz.slug}`}
-                className="w-64 shrink-0 rounded-card border border-surface-border bg-surface-card overflow-hidden"
+                className="group relative block h-72 overflow-hidden rounded-card bg-surface-card"
               >
                 <div
-                  className="h-36 w-full bg-cover bg-center bg-surface-card"
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
                   style={biz.cover_photo_url ? { backgroundImage: `url('${biz.cover_photo_url}')` } : {}}
                 />
-                <div className="p-4">
-                  <p className="text-sm font-medium text-text-primary">{biz.name}</p>
-                  <p className="mt-1 text-xs text-text-muted capitalize">{biz.category}</p>
-                  <div className="mt-3 flex items-center justify-between">
-                    <span className="text-sm font-semibold text-text-primary">
-                      {startingPrice !== null ? `Rs. ${startingPrice}` : "View services"}
-                    </span>
-                    <span
-                      style={{ backgroundColor: biz.accent_color }}
-                      className="rounded-pill px-3 py-1.5 text-xs font-medium text-surface-black"
-                    >
-                      View
-                    </span>
-                  </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+
+                <span
+                  className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full text-surface-black"
+                  style={{ backgroundColor: biz.accent_color }}
+                >
+                  <ArrowUpRight className="h-5 w-5" />
+                </span>
+
+                <div className="absolute inset-x-0 bottom-0 p-5">
+                  <p className="text-xs uppercase tracking-wide text-white/70">{biz.category}</p>
+                  <p className="mt-1 font-display text-lg font-medium text-white">{biz.name}</p>
+                  <p className="mt-1 text-sm text-white/80">
+                    {startingPrice !== null ? `Starting at Rs. ${startingPrice}` : "View services"}
+                  </p>
                 </div>
               </Link>
             )

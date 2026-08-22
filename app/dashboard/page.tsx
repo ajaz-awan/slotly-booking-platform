@@ -5,7 +5,8 @@ import { Scissors, Calendar, ClipboardList, ExternalLink } from "lucide-react"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+const { data: { session } } = await supabase.auth.getSession()
+const user = session?.user
   if (!user) redirect("/login")
 
   const { data: business } = await supabase
@@ -14,17 +15,46 @@ export default async function DashboardPage() {
     .eq("owner_id", user.id)
     .single()
 
-  if (!business) redirect("/dashboard/onboarding")
+  if (!business) {
+    return (
+      <div className="min-h-screen bg-surface-black px-6 py-8">
+        <div className="mx-auto max-w-3xl">
+          <h1 className="font-display italic text-2xl font-medium text-text-primary mb-1">
+            Welcome
+          </h1>
+          <p className="text-text-muted text-sm mb-8">
+            Book appointments with your favourite businesses, or set up your own.
+          </p>
 
-  const { count: servicesCount } = await supabase
-    .from("services")
-    .select("*", { count: "exact", head: true })
-    .eq("business_id", business.id)
+          <Link
+            href="/dashboard/onboarding"
+            className="block rounded-card bg-surface-card p-6 hover:bg-surface-card-hover transition-colors border border-surface-border"
+          >
+            <h3 className="text-text-primary font-medium">Open Your Business</h3>
+            <p className="text-text-muted text-sm mt-1">
+              List your services and start taking bookings — verified in a couple of minutes.
+            </p>
+          </Link>
+        </div>
+      </div>
+    )
+  }
 
-  const { count: bookingsCount } = await supabase
-    .from("bookings")
-    .select("*, services!inner(business_id)", { count: "exact", head: true })
-    .eq("services.business_id", business.id)
+  const [{ count: servicesCount }, { count: bookingsCount }, { count: pendingCount }] = await Promise.all([
+    supabase
+      .from("services")
+      .select("*", { count: "exact", head: true })
+      .eq("business_id", business.id),
+    supabase
+      .from("bookings")
+      .select("*, services!inner(business_id)", { count: "exact", head: true })
+      .eq("services.business_id", business.id),
+    supabase
+      .from("bookings")
+      .select("*, services!inner(business_id)", { count: "exact", head: true })
+      .eq("services.business_id", business.id)
+      .eq("status", "pending"),
+  ])
 
   const accentColor = business.accent_color
 
@@ -32,7 +62,7 @@ export default async function DashboardPage() {
     <div className="min-h-screen bg-surface-black px-6 py-8">
       <div className="mx-auto max-w-3xl">
         <div className="flex items-center justify-between mb-1">
-          <h1 className="font-display text-2xl font-semibold text-text-primary">{business.name}</h1>
+          <h1 className="font-display italic text-2xl font-medium text-text-primary">{business.name}</h1>
           <Link
             href={`/${business.slug}`}
             target="_blank"
@@ -47,11 +77,11 @@ export default async function DashboardPage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Link
             href="/dashboard/services"
-            className="rounded-2xl bg-surface-card p-5 hover:bg-surface-card/70 transition-colors"
+            className="rounded-card bg-surface-card p-5 hover:bg-surface-card-hover transition-colors"
           >
             <div
               style={{ backgroundColor: `${accentColor}1A` }}
-              className="h-10 w-10 rounded-xl flex items-center justify-center mb-3"
+              className="h-12 w-12 rounded-full flex items-center justify-center mb-3"
             >
               <Scissors size={18} style={{ color: accentColor }} />
             </div>
@@ -61,11 +91,11 @@ export default async function DashboardPage() {
 
           <Link
             href="/dashboard/availability"
-            className="rounded-2xl bg-surface-card p-5 hover:bg-surface-card/70 transition-colors"
+            className="rounded-card bg-surface-card p-5 hover:bg-surface-card-hover transition-colors"
           >
             <div
               style={{ backgroundColor: `${accentColor}1A` }}
-              className="h-10 w-10 rounded-xl flex items-center justify-center mb-3"
+              className="h-12 w-12 rounded-full flex items-center justify-center mb-3"
             >
               <Calendar size={18} style={{ color: accentColor }} />
             </div>
@@ -75,16 +105,21 @@ export default async function DashboardPage() {
 
           <Link
             href="/dashboard/bookings"
-            className="rounded-2xl bg-surface-card p-5 hover:bg-surface-card/70 transition-colors"
+            className="relative rounded-card bg-surface-card p-5 hover:bg-surface-card-hover transition-colors"
           >
+            {(pendingCount ?? 0) > 0 && (
+              <span className="absolute right-4 top-4 flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-500 px-1.5 text-[11px] font-medium text-surface-black">
+                {pendingCount ?? 0}              </span>
+            )}
             <div
               style={{ backgroundColor: `${accentColor}1A` }}
-              className="h-10 w-10 rounded-xl flex items-center justify-center mb-3"
+              className="h-12 w-12 rounded-full flex items-center justify-center mb-3"
             >
               <ClipboardList size={18} style={{ color: accentColor }} />
             </div>
             <h3 className="text-text-primary font-medium text-sm">Bookings</h3>
-            <p className="text-text-muted text-xs mt-1">{bookingsCount ?? 0} total bookings</p>
+            <p className="text-text-muted text-xs mt-1">
+              {(pendingCount ?? 0) > 0 ? `${pendingCount ?? 0} pending approval` : `${bookingsCount ?? 0} total bookings`}            </p>
           </Link>
         </div>
       </div>

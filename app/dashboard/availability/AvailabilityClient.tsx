@@ -51,7 +51,7 @@ export default function AvailabilityClient({
   return (
     <div className="min-h-screen bg-surface-black px-6 py-8">
       <div className="mx-auto max-w-xl">
-        <h1 className="font-display text-2xl font-semibold text-text-primary mb-1">Availability</h1>
+        <h1 className="font-display italic text-2xl font-medium text-text-primary mb-1">Availability</h1>
         <p className="text-text-muted text-sm mb-6">
           Har din ke liye working hours set karo. Off days ko toggle off kar do.
         </p>
@@ -62,20 +62,20 @@ export default function AvailabilityClient({
             return (
               <div
                 key={label}
-                className="flex items-center gap-4 rounded-2xl bg-surface-card px-5 py-4"
+                className="flex items-center gap-4 rounded-card bg-surface-card px-5 py-4"
               >
                 <button
                   onClick={() => updateDay(index, { enabled: !day.enabled })}
                   style={{ backgroundColor: day.enabled ? accentColor : "#3A3A3A" }}
-                  className="relative h-6 w-11 rounded-full flex-shrink-0 transition-colors"
+                  className="relative h-6 w-11 shrink-0 rounded-full transition-colors mr-2"
                 >
                   <span
-                    className="absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform"
-                    style={{ transform: day.enabled ? "translateX(22px)" : "translateX(2px)" }}
+                    className="absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white transition-transform"
+                    style={{ transform: day.enabled ? "translateX(20px)" : "translateX(0px)" }}
                   />
                 </button>
 
-                <span className="text-text-primary text-sm w-24 flex-shrink-0">{label}</span>
+                <span className="text-text-primary text-sm w-24 shrink-0">{label}</span>
 
                 {day.enabled ? (
                   <div className="flex items-center gap-2 ml-auto">

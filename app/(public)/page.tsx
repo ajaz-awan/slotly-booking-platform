@@ -1,18 +1,15 @@
 import Navbar from "@/components/ui/Navbar"
 import { createClient } from "@/lib/supabase/server"
 import BusinessDiscovery from "./BusinessDiscovery"
+import { getCachedBusinesses } from "./data"
 
 export default async function LandingPage() {
   const supabase = await createClient()
 
-  const { data: { user } } = await supabase.auth.getUser()
-
-  const { data: businesses } = await supabase
-    .from("businesses")
-    .select("id, name, slug, category, cover_photo_url, accent_color, services(price)")
-    .eq("is_active", true)
-    .order("created_at", { ascending: false })
-    .limit(24)
+  const [{ data: { user } }, businesses] = await Promise.all([
+    supabase.auth.getUser(),
+    getCachedBusinesses(),
+  ])
 
   return (
     <div className="min-h-screen bg-surface-black">
@@ -35,7 +32,7 @@ export default async function LandingPage() {
           availability and reserve instantly.
         </p>
 
-        <BusinessDiscovery businesses={businesses ?? []} />
+        <BusinessDiscovery businesses={businesses} />
       </section>
     </div>
   )
