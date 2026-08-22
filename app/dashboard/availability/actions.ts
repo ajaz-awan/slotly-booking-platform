@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
+import { availabilitySchema } from "@/lib/validations"
 
 async function getOwnerBusinessId() {
   const supabase = await createClient()
@@ -18,22 +19,10 @@ async function getOwnerBusinessId() {
   return business.id
 }
 
-type DayRule = {
-  day_of_week: number
-  enabled: boolean
-  start_time: string
-  end_time: string
-}
-
-export async function saveAvailability(rules: DayRule[]) {
+export async function saveAvailability(rules: unknown) {
   const supabase = await createClient()
   const businessId = await getOwnerBusinessId()
-
-  for (const rule of rules) {
-    if (rule.start_time >= rule.end_time) {
-      throw new Error(`Din ${rule.day_of_week} ka end time start time se pehle nahi ho sakta`)
-    }
-  }
+  const parsedRules = availabilitySchema.parse(rules)
 
   const { error: deleteError } = await supabase
     .from("availability_rules")
@@ -42,7 +31,7 @@ export async function saveAvailability(rules: DayRule[]) {
 
   if (deleteError) throw new Error(deleteError.message)
 
-  const rowsToInsert = rules
+  const rowsToInsert = parsedRules
     .filter((r) => r.enabled)
     .map((r) => ({
       business_id: businessId,

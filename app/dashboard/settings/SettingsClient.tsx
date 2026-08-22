@@ -23,8 +23,25 @@ export default function SettingsClient({
   const [coverPreview, setCoverPreview] = useState(business.cover_photo_url)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [imageError, setImageError] = useState("")
   const logoInputRef = useRef<HTMLInputElement>(null)
   const coverInputRef = useRef<HTMLInputElement>(null)
+
+  const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"]
+  const MAX_BYTES = 4 * 1024 * 1024
+
+  function validateImage(file: File, label: string) {
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      setImageError(`${label} sirf JPG, PNG ya WEBP honi chahiye`)
+      return false
+    }
+    if (file.size > MAX_BYTES) {
+      setImageError(`${label} ka size 4MB se kam honi chahiye`)
+      return false
+    }
+    setImageError("")
+    return true
+  }
 
   const [email, setEmail] = useState(currentEmail)
   const [emailSaving, setEmailSaving] = useState(false)
@@ -38,13 +55,19 @@ export default function SettingsClient({
   }
 
   async function handleSubmit(formData: FormData) {
+    if (imageError) return
     setSaving(true)
     setSaved(false)
     formData.set("businessId", business.id)
-    await updateBusinessImages(formData)
-    setSaving(false)
-    setSaved(true)
-    setTimeout(() => setSaved(false), 3000)
+    try {
+      await updateBusinessImages(formData)
+      setSaved(true)
+      setTimeout(() => setSaved(false), 3000)
+    } catch (err) {
+      setImageError(err instanceof Error ? err.message : "Photo save nahi ho payi")
+    } finally {
+      setSaving(false)
+    }
   }
 
   async function handleEmailSubmit(e: React.FormEvent) {
@@ -117,7 +140,7 @@ export default function SettingsClient({
               className="hidden"
               onChange={(e) => {
                 const file = e.target.files?.[0]
-                if (file) handlePreview(file, setCoverPreview)
+                if (file && validateImage(file, "Cover photo")) handlePreview(file, setCoverPreview)
               }}
             />
           </div>
@@ -143,22 +166,25 @@ export default function SettingsClient({
               className="hidden"
               onChange={(e) => {
                 const file = e.target.files?.[0]
-                if (file) handlePreview(file, setLogoPreview)
+                if (file && validateImage(file, "Logo")) handlePreview(file, setLogoPreview)
               }}
             />
           </div>
 
-          <div className="flex items-center gap-3">
-            <button
-              type="submit"
-              disabled={saving}
-              style={{ backgroundColor: business.accent_color }}
-              className="flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-medium text-surface-black disabled:opacity-60"
-            >
-              {saving && <Loader2 size={14} className="animate-spin" />}
-              {saving ? "Save ho raha hai..." : "Save Changes"}
-            </button>
-            {saved && <span className="text-sm text-text-muted">Saved ✓</span>}
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-3">
+              <button
+                type="submit"
+                disabled={saving || !!imageError}
+                style={{ backgroundColor: business.accent_color }}
+                className="flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-medium text-surface-black disabled:opacity-60"
+              >
+                {saving && <Loader2 size={14} className="animate-spin" />}
+                {saving ? "Save ho raha hai..." : "Save Changes"}
+              </button>
+              {saved && <span className="text-sm text-text-muted">Saved ✓</span>}
+            </div>
+            {imageError && <p className="text-sm text-red-400">{imageError}</p>}
           </div>
         </form>
       </div>

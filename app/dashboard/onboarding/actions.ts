@@ -2,6 +2,7 @@
 
 import { createClient as createServerClient } from "@/lib/supabase/server";
 import { createClient as createSupabaseJsClient } from "@supabase/supabase-js";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 function getIsolatedClient() {
   return createSupabaseJsClient(
@@ -18,6 +19,11 @@ export async function sendBusinessEmailOtp(email: string) {
   } = await supabase.auth.getUser();
 
   if (!user) return { error: "You need to be signed in." };
+
+  const { allowed } = await checkRateLimit(`otp:${user.id}`, 3, 10 * 60);
+  if (!allowed) {
+    return { error: "Bohat zyada koshishein ho gayi hain, thodi der baad try karo." };
+  }
 
   const isolated = getIsolatedClient();
   const { error } = await isolated.auth.signInWithOtp({

@@ -3,15 +3,34 @@
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 
+const ALLOWED_IMAGE_TYPES: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+}
+
+const MAX_IMAGE_BYTES = 4 * 1024 * 1024
+
+function assertValidImage(file: File, label: string) {
+  const ext = ALLOWED_IMAGE_TYPES[file.type]
+  if (!ext) {
+    throw new Error(`${label} sirf JPG, PNG ya WEBP format mein honi chahiye`)
+  }
+  if (file.size > MAX_IMAGE_BYTES) {
+    throw new Error(`${label} ka size 4MB se zyada nahi ho sakta`)
+  }
+  return ext
+}
+
 async function uploadImage(businessId: string, file: File, kind: "logo" | "cover") {
   const supabase = await createClient()
 
-  const ext = file.name.split(".").pop()
+  const ext = assertValidImage(file, kind === "logo" ? "Logo" : "Cover photo")
   const path = `${businessId}/${kind}-${Date.now()}.${ext}`
 
   const { error: uploadError } = await supabase.storage
     .from("business-images")
-    .upload(path, file, { upsert: true })
+    .upload(path, file, { upsert: true, contentType: file.type })
 
   if (uploadError) throw new Error(uploadError.message)
 

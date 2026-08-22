@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { NextRequest, NextResponse } from "next/server"
+import { checkRateLimit } from "@/lib/rate-limit"
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient()
@@ -7,6 +8,11 @@ export async function POST(request: NextRequest) {
 
   if (!user) {
     return NextResponse.json({ error: "Login zaroori hai booking ke liye" }, { status: 401 })
+  }
+
+  const { allowed } = await checkRateLimit(`booking:${user.id}`, 5, 5 * 60)
+  if (!allowed) {
+    return NextResponse.json({ error: "Bohat zyada bookings ho gayi hain, thodi der baad try karo" }, { status: 429 })
   }
 
   const body = await request.json()

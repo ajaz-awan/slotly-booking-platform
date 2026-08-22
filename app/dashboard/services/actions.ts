@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
+import { serviceSchema } from "@/lib/validations"
 
 type ServiceInput = {
   name: string
@@ -28,13 +29,14 @@ async function getOwnerBusinessId() {
 export async function createService(input: ServiceInput) {
   const supabase = await createClient()
   const businessId = await getOwnerBusinessId()
+  const data = serviceSchema.parse(input)
 
   const { error } = await supabase.from("services").insert({
     business_id: businessId,
-    name: input.name,
-    description: input.description,
-    duration_minutes: input.duration_minutes,
-    price: input.price,
+    name: data.name,
+    description: data.description,
+    duration_minutes: data.duration_minutes,
+    price: data.price,
   })
 
   if (error) throw new Error(error.message)
@@ -44,14 +46,15 @@ export async function createService(input: ServiceInput) {
 export async function updateService(serviceId: string, input: ServiceInput) {
   const supabase = await createClient()
   const businessId = await getOwnerBusinessId()
+  const data = serviceSchema.parse(input)
 
   const { error } = await supabase
     .from("services")
     .update({
-      name: input.name,
-      description: input.description,
-      duration_minutes: input.duration_minutes,
-      price: input.price,
+      name: data.name,
+      description: data.description,
+      duration_minutes: data.duration_minutes,
+      price: data.price,
     })
     .eq("id", serviceId)
     .eq("business_id", businessId)
