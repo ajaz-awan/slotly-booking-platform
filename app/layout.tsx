@@ -15,8 +15,34 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Booking Platform",
-  description: "Book appointments with your favorite businesses",
+  metadataBase: new URL("https://slotly-booking-platform.vercel.app"),
+  title: "Slotly — Book Appointments in Seconds",
+  description:
+    "Multi-tenant appointment booking for salons, clinics, and tutors. Find a business, check live availability, and book instantly.",
+  openGraph: {
+    title: "Slotly — Book Appointments in Seconds",
+    description:
+      "Multi-tenant appointment booking for salons, clinics, and tutors. Find a business, check live availability, and book instantly.",
+    url: "https://slotly-booking-platform.vercel.app",
+    siteName: "Slotly",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Slotly — Book your next appointment in seconds",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Slotly — Book Appointments in Seconds",
+    description:
+      "Multi-tenant appointment booking for salons, clinics, and tutors.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({
