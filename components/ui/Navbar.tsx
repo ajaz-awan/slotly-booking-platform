@@ -9,6 +9,7 @@ type NavbarProps = {
   businessLogoUrl?: string;
   isSignedIn?: boolean;
   showSearch?: boolean;
+  hasBusiness?: boolean;
 };
 
 export default function Navbar({
@@ -16,6 +17,7 @@ export default function Navbar({
   businessLogoUrl,
   isSignedIn = false,
   showSearch = true,
+  hasBusiness = false,
 }: NavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -52,17 +54,24 @@ export default function Navbar({
         <div className="ml-auto hidden items-center gap-3 md:flex">
           {isSignedIn ? (
             <>
-              <Link
-                href="/dashboard/settings"
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-card text-text-primary hover:bg-surface-card-hover"
-              >
-                <Settings className="h-4 w-4" />
-              </Link>
+              {hasBusiness && (
+                <Link
+                  href="/dashboard/settings"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-card text-text-primary hover:bg-surface-card-hover"
+                >
+                  <Settings className="h-4 w-4" />
+                </Link>
+              )}
               <Link
                 href="/dashboard"
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-card text-text-primary hover:bg-surface-card-hover"
+                className={
+                  hasBusiness
+                    ? 'flex h-9 w-9 items-center justify-center rounded-full bg-surface-card text-text-primary hover:bg-surface-card-hover'
+                    : 'flex items-center gap-2 rounded-pill bg-surface-card px-4 py-2 text-sm font-medium text-text-primary hover:bg-surface-card-hover'
+                }
               >
                 <User className="h-4 w-4" />
+                {!hasBusiness && <span>Dashboard</span>}
               </Link>
             </>
           ) : (
@@ -105,12 +114,14 @@ export default function Navbar({
               >
                 Dashboard
               </Link>
-              <Link
-                href="/dashboard/settings"
-                className="block rounded-pill bg-surface-card px-4 py-2.5 text-center text-sm font-medium text-text-primary"
-              >
-                Settings
-              </Link>
+              {hasBusiness && (
+                <Link
+                  href="/dashboard/settings"
+                  className="block rounded-pill bg-surface-card px-4 py-2.5 text-center text-sm font-medium text-text-primary"
+                >
+                  Settings
+                </Link>
+              )}
             </div>
           ) : (
             <Link

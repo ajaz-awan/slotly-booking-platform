@@ -12,6 +12,6 @@ export async function GET(request: Request) {
     await supabase.auth.exchangeCodeForSession(code);
   }
 
-  // login ke baad user ko dashboard par bhej do
-  return NextResponse.redirect(`${origin}/dashboard`);
+  // login ke baad user ko public homepage par bhej do
+  return NextResponse.redirect(`${origin}/`);
 }

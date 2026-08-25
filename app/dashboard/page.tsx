@@ -64,7 +64,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-surface-black">
-      <Navbar showSearch={false} isSignedIn={true} businessName={business.name} />
+      <Navbar showSearch={false} isSignedIn={true} businessName={business.name} hasBusiness={true} />
       <div className="px-6 py-8">
         <div className="mx-auto max-w-3xl">
           <div className="flex items-center justify-between mb-1">

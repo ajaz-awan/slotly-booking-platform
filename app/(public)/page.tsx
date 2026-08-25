@@ -6,14 +6,20 @@ import { getCachedBusinesses } from "./data"
 export default async function LandingPage() {
   const supabase = await createClient()
 
-  const [{ data: { user } }, businesses] = await Promise.all([
-    supabase.auth.getUser(),
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  const [businesses, ownedBusiness] = await Promise.all([
     getCachedBusinesses(),
+    user
+      ? supabase.from("businesses").select("id").eq("owner_id", user.id).maybeSingle()
+      : Promise.resolve({ data: null }),
   ])
 
   return (
     <div className="min-h-screen bg-surface-black">
-      <Navbar showSearch={false} isSignedIn={!!user} />
+      <Navbar showSearch={false} isSignedIn={!!user} hasBusiness={!!ownedBusiness.data} />
 
       <section className="mx-auto max-w-6xl px-6 pt-16 pb-0 sm:pt-24">
         <h1 className="font-display leading-[1.05]">

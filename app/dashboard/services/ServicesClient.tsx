@@ -174,19 +174,27 @@ function ServiceFormModal({
   const [name, setName] = useState(service?.name ?? "")
   const [description, setDescription] = useState(service?.description ?? "")
   const [duration, setDuration] = useState(service?.duration_minutes ?? 30)
-  const [price, setPrice] = useState(service?.price ?? 0)
+  const [price, setPrice] = useState(service ? String(service.price) : "")
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
 
+  function handlePriceChange(raw: string) {
+    const cleaned = raw.replace(/^0+(?=\d)/, "")
+    if (cleaned === "" || /^\d*\.?\d*$/.test(cleaned)) {
+      setPrice(cleaned)
+    }
+  }
+
   async function handleSubmit() {
-    if (!name.trim() || duration <= 0 || price < 0) {
+    const numericPrice = price === "" ? 0 : Number(price)
+    if (!name.trim() || duration <= 0 || numericPrice < 0) {
       setError("Sahi values daalo — name khali nahi ho sakta, duration 0 se zyada honi chahiye.")
       return
     }
     setSaving(true)
     setError("")
     try {
-      const input = { name, description, duration_minutes: duration, price }
+      const input = { name, description, duration_minutes: duration, price: numericPrice }
       if (service) {
         await updateService(service.id, input)
         onUpdated({ ...service, ...input })
@@ -245,9 +253,11 @@ function ServiceFormModal({
             <div className="flex-1">
               <label className="text-xs text-text-muted">Price (Rs.)</label>
               <input
-                type="number"
+                type="text"
+                inputMode="decimal"
                 value={price}
-                onChange={(e) => setPrice(Number(e.target.value))}
+                onChange={(e) => handlePriceChange(e.target.value)}
+                placeholder="0"
                 className="w-full bg-surface-black rounded-card px-4 py-3 text-text-primary text-sm outline-none mt-1"
               />
             </div>
