@@ -78,7 +78,7 @@ export default async function DashboardPage() {
               <ExternalLink size={12} />
             </Link>
           </div>
-          <p className="text-text-muted text-sm mb-8">MANAGE YOUR OWN BUSSINESS HERE</p>
+          <p className="text-text-muted text-sm mb-8">manage your own business</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Link
