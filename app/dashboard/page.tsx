@@ -78,7 +78,7 @@ export default async function DashboardPage() {
               <ExternalLink size={12} />
             </Link>
           </div>
-          <p className="text-text-muted text-sm mb-8">Apna business yahan se manage karo</p>
+          <p className="text-text-muted text-sm mb-8">MANAGE YOUR OWN BUSSINESS HERE</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Link
@@ -106,7 +106,7 @@ export default async function DashboardPage() {
                 <Calendar size={18} style={{ color: accentColor }} />
               </div>
               <h3 className="text-text-primary font-medium text-sm">Availability</h3>
-              <p className="text-text-muted text-xs mt-1">Working hours set karo</p>
+              <p className="text-text-muted text-xs mt-1">set working hours</p>
             </Link>
 
             <Link
