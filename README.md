@@ -34,6 +34,13 @@ Multi-tenant appointment booking platform for salons, clinics, tutors, and simil
 npm install
 npm run dev
 ```
+## Screenshots
+
+![Screenshot 1](Screenshot%20%28320%29.png)
+
+![Screenshot 2](Screenshot%20%28322%29.png)
+
+![Screenshot 3](Screenshot%202026-08-26%20234846.png)
 
 You'll need a Supabase project with the schema this app expects, plus the environment variables in `.env.example` filled in (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, and a Sentry DSN if you want error reporting locally).
 
