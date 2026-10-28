@@ -46,4 +46,4 @@ You'll need a Supabase project with the schema this app expects, plus the enviro
 
 ## Status
 
-Actively developed as a portfolio project. Core booking flow, auth, dashboard, RLS, rate limiting, and input validation are done and deployed. Still on the list: automated tests and a full visual QA pass.
+Actively developed as a portfolio project. Core booking flow, auth, dashboard, RLS, rate limiting, and input validation are done and deployed. Still on the list: automated tests.
